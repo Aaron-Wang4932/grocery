@@ -21,8 +21,8 @@ public class Main extends JFrame implements ActionListener {
     public Main() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("groceries bruh");
-        setPreferredSize(new Dimension(1000, 1000));
-        setMinimumSize(new Dimension(700, 700));
+//        setPreferredSize(new Dimension(1000, 1000));
+//        setMinimumSize(new Dimension(700, 700));
 
         pnlViewGroceries = new ViewGroceries(this);
         pnlAddGroceries = new AddGroceries(this);

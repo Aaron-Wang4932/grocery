@@ -4,6 +4,8 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -17,6 +19,7 @@ public class ViewGroceries extends GradientPanel {
         super(new Color(0x3E61FF), new Color(0xB2B6FF), GradientPanel.DIAGONAL_FILL);
         this.gui = gui;
         setLayout(new MigLayout("insets 10 30 50 30, gap 40 15"));
+        setPreferredSize(new Dimension(700, 1000));
 
         JLabel lblTitle = new JLabel("viewing groceries", JLabel.CENTER);
         lblTitle.setFont(new Font("Century Gothic", Font.BOLD | Font.ITALIC, 26));
@@ -30,12 +33,13 @@ public class ViewGroceries extends GradientPanel {
         lblTitle.setForeground(Color.white);
 
         txaItem = new JTextArea("", 20, 20);
-        txaItem.setFont(new Font("Century Gothic", Font.PLAIN, 16));
+        txaItem.setFont(new Font("Century Gothic", Font.BOLD, 16));
         txaItem.setLineWrap(true);
         txaItem.setEditable(false);
         txaItem.setOpaque(false);
         txaItem.setMargin(new Insets(5, 5, 5, 5));
         txaItem.setCaretColor(new Color(0, 0, 0, 0));
+        txaItem.setForeground(new Color(0x000000));
 
         JScrollPane scrItem = new JScrollPane(txaItem, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrItem.setOpaque(false);
@@ -52,9 +56,25 @@ public class ViewGroceries extends GradientPanel {
         JTextField txtSearch = new JTextField();
         txtSearch.setFont(new Font("Century Gothic", Font.BOLD | Font.ITALIC, 16));
         txtSearch.setMargin(new Insets(5, 5, 5, 5));
-        txtSearch.addKeyListener(new KeyAdapter() {
+//        txtSearch.addKeyListener(new KeyAdapter() {
+//            @Override
+//            public void keyTyped(KeyEvent e) {
+//                search(txtSearch.getText());
+//            }
+//        });
+        txtSearch.getDocument().addDocumentListener(new DocumentListener() {
             @Override
-            public void keyTyped(KeyEvent e) {
+            public void insertUpdate(DocumentEvent e) {
+                search(txtSearch.getText());
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                search(txtSearch.getText());
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
                 search(txtSearch.getText());
             }
         });
@@ -253,7 +273,7 @@ public class ViewGroceries extends GradientPanel {
     void search(String str) {
         DefaultComboBoxModel<Item> cmbModel = new DefaultComboBoxModel<>();
         gui.itemList.forEach(item -> {
-            if(item.toString().toLowerCase().contains(str)) {
+            if(item.toString().toLowerCase().contains(str.toLowerCase())) {
                 cmbModel.addElement(item);
             }
         });
