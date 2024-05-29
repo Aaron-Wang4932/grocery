@@ -17,6 +17,7 @@ public class Main extends JFrame implements ActionListener {
     public ArrayList<Item> itemList = new ArrayList<>();
     File itemFile = new File("src/main/resources/inventory.txt");
     ViewGroceries pnlViewGroceries;
+    AddGroceries pnlAddGroceries;
     public Main() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("groceries bruh");
@@ -24,6 +25,7 @@ public class Main extends JFrame implements ActionListener {
         setMinimumSize(new Dimension(700, 700));
 
         pnlViewGroceries = new ViewGroceries(this);
+        pnlAddGroceries = new AddGroceries(this);
 
         add(pnlViewGroceries);
         pack();
@@ -40,9 +42,20 @@ public class Main extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        try {
+            loadItems();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
 
+        if(e.getActionCommand().equals("add")) swapPanels(pnlViewGroceries, pnlAddGroceries);
     }
-
+    private void swapPanels(JPanel oldPanel, JPanel newPanel) {
+        this.remove(oldPanel);
+        this.add(newPanel);
+        this.repaint();
+        this.pack();
+    }
     private void loadItems() throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(itemFile));
         String temp;

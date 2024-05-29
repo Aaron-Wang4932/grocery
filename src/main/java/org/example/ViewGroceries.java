@@ -191,12 +191,12 @@ public class ViewGroceries extends GradientPanel {
                 btn.setBorder(BorderFactory.createLineBorder(Color.black, 3, true));
             }
         });
+        btnAddItems.setActionCommand("add");
         btnAddItems.addActionListener(gui);
 
 
         cmbResult.addActionListener(e -> {
             Item i = (Item) cmbResult.getSelectedItem();
-            System.out.println(i);
             txtName.setText(i.getName());
             txtSku.setText(i.getSku());
             txtCate.setText(i.getCategory());
