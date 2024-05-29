@@ -8,7 +8,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
 
 public class ViewGroceries extends GradientPanel {
     Main gui;
@@ -19,7 +18,7 @@ public class ViewGroceries extends GradientPanel {
         super(new Color(0x3E61FF), new Color(0xB2B6FF), GradientPanel.DIAGONAL_FILL);
         this.gui = gui;
         setLayout(new MigLayout("insets 10 30 50 30, gap 40 15"));
-        setPreferredSize(new Dimension(700, 1000));
+        setPreferredSize(new Dimension(850, 1000));
 
         JLabel lblTitle = new JLabel("viewing groceries", JLabel.CENTER);
         lblTitle.setFont(new Font("Century Gothic", Font.BOLD | Font.ITALIC, 26));
@@ -56,12 +55,6 @@ public class ViewGroceries extends GradientPanel {
         JTextField txtSearch = new JTextField();
         txtSearch.setFont(new Font("Century Gothic", Font.BOLD | Font.ITALIC, 16));
         txtSearch.setMargin(new Insets(5, 5, 5, 5));
-//        txtSearch.addKeyListener(new KeyAdapter() {
-//            @Override
-//            public void keyTyped(KeyEvent e) {
-//                search(txtSearch.getText());
-//            }
-//        });
         txtSearch.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {

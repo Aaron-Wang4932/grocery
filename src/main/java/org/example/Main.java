@@ -15,7 +15,7 @@ import java.util.Arrays;
 public class Main extends JFrame implements ActionListener {
 
     public ArrayList<Item> itemList = new ArrayList<>();
-    File itemFile = new File("src/main/resources/inventory.txt");
+    File itemFile = new File("resources/inventory.txt");
     ViewGroceries pnlViewGroceries;
     AddGroceries pnlAddGroceries;
     public Main() {
@@ -49,14 +49,17 @@ public class Main extends JFrame implements ActionListener {
         }
 
         if(e.getActionCommand().equals("add")) swapPanels(pnlViewGroceries, pnlAddGroceries);
+        else swapPanels(pnlAddGroceries, pnlViewGroceries);
     }
     private void swapPanels(JPanel oldPanel, JPanel newPanel) {
-        this.remove(oldPanel);
-        this.add(newPanel);
-        this.repaint();
-        this.pack();
+        remove(oldPanel);
+        add(newPanel);
+        repaint();
+        pack();
+        setLocationRelativeTo(null);
     }
     private void loadItems() throws IOException {
+        itemList.clear();
         BufferedReader br = new BufferedReader(new FileReader(itemFile));
         String temp;
         String[] tempSplit;
@@ -76,9 +79,7 @@ public class Main extends JFrame implements ActionListener {
 
         pnlViewGroceries.txaItem.setText("");
 
-        itemList.forEach(item -> {
-            pnlViewGroceries.txaItem.append(item + "\n");
-        });
+        itemList.forEach(item -> pnlViewGroceries.txaItem.append(item + "\n"));
 
 
     }
