@@ -4,16 +4,20 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Insets;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
 
 public class ViewGroceries extends GradientPanel {
-    public ViewGroceries() {
+    Main gui;
+    public JTextArea txaItem;
+    public JComboBox<Item> cmbResult;
+    JTextField txtName;
+    public ViewGroceries(Main gui) {
         super(new Color(0x3E61FF), new Color(0xB2B6FF), GradientPanel.DIAGONAL_FILL);
-        setLayout(new MigLayout("insets 10 30 60 30, gap 40 20"));
+        this.gui = gui;
+        setLayout(new MigLayout("insets 10 30 50 30, gap 40 15"));
+
         JLabel lblTitle = new JLabel("viewing groceries", JLabel.CENTER);
         lblTitle.setFont(new Font("Century Gothic", Font.BOLD | Font.ITALIC, 26));
         lblTitle.setBorder(BorderFactory.createTitledBorder(
@@ -25,7 +29,7 @@ public class ViewGroceries extends GradientPanel {
                 new Color(0xebddff)));
         lblTitle.setForeground(Color.white);
 
-        JTextArea txaItem = new JTextArea("placeholder", 20, 20);
+        txaItem = new JTextArea("", 20, 20);
         txaItem.setFont(new Font("Century Gothic", Font.PLAIN, 16));
         txaItem.setLineWrap(true);
         txaItem.setEditable(false);
@@ -48,20 +52,26 @@ public class ViewGroceries extends GradientPanel {
         JTextField txtSearch = new JTextField();
         txtSearch.setFont(new Font("Century Gothic", Font.BOLD | Font.ITALIC, 16));
         txtSearch.setMargin(new Insets(5, 5, 5, 5));
+        txtSearch.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                search(txtSearch.getText());
+            }
+        });
 
         JLabel lblResult = new JLabel("Search Result:");
         lblResult.setFont(new Font("Century Gothic", Font.PLAIN, 16));
         lblResult.setForeground(Color.white);
 
-        JComboBox<String> cmbResult = new JComboBox<>();
+        cmbResult = new JComboBox<>();
         cmbResult.setFont(new Font("Century Gothic", Font.PLAIN, 16));
-        cmbResult.setForeground(Color.white);
+        cmbResult.setForeground(Color.black);
 
         JLabel lblName = new JLabel("Name:");
         lblName.setFont(new Font("Century Gothic", Font.BOLD | Font.ITALIC, 16));
         lblName.setForeground(Color.white);
 
-        JTextField txtName = new JTextField();
+        txtName = new JTextField();
         txtName.setFont(new Font("Century Gothic", Font.BOLD | Font.ITALIC, 16));
         txtName.setMargin(new Insets(5, 5, 5, 5));
         txtName.setEditable(false);
@@ -111,7 +121,7 @@ public class ViewGroceries extends GradientPanel {
         txtVndPrc.setMargin(new Insets(5, 5, 5, 5));
         txtVndPrc.setEditable(false);
 
-        JLabel lblMrkPct = new JLabel("Markup %:");
+        JLabel lblMrkPct = new JLabel("Markup:");
         lblMrkPct.setFont(new Font("Century Gothic", Font.PLAIN, 16));
         lblMrkPct.setForeground(Color.white);
 
@@ -129,7 +139,7 @@ public class ViewGroceries extends GradientPanel {
         txtRegPrc.setMargin(new Insets(5, 5, 5, 5));
         txtRegPrc.setEditable(false);
 
-        JLabel lblCurDsc = new JLabel("Cur. Discount %:");
+        JLabel lblCurDsc = new JLabel("Cur. Discount:");
         lblCurDsc.setFont(new Font("Century Gothic", Font.PLAIN, 16));
         lblCurDsc.setForeground(Color.white);
 
@@ -181,6 +191,23 @@ public class ViewGroceries extends GradientPanel {
                 btn.setBorder(BorderFactory.createLineBorder(Color.black, 3, true));
             }
         });
+        btnAddItems.addActionListener(gui);
+
+
+        cmbResult.addActionListener(e -> {
+            Item i = (Item) cmbResult.getSelectedItem();
+            System.out.println(i);
+            txtName.setText(i.getName());
+            txtSku.setText(i.getSku());
+            txtCate.setText(i.getCategory());
+            txtQty.setText(i.getQty() + "");
+            txtMinQty.setText(i.getMinQty() + "");
+            txtVndPrc.setText(i.getVendorPrice() + "");
+            txtMrkPct.setText(i.getMarkupPercent() + "%");
+            txtRegPrc.setText("$" + i.getRegPrice());
+            txtCurDsc.setText(i.getCurDiscount() + "%");
+            txtCurPrc.setText("$" + i.getCurPrice());
+        });
 
         add(lblTitle, "wrap, pushx, growx, span");
 
@@ -221,5 +248,20 @@ public class ViewGroceries extends GradientPanel {
         add(spr, "span, pushx, growx, wrap");
 
         add(btnAddItems, "span, pushx, growx, wrap");
+    }
+
+    void search(String str) {
+        DefaultComboBoxModel<Item> cmbModel = new DefaultComboBoxModel<>();
+        gui.itemList.forEach(item -> {
+            if(item.toString().toLowerCase().contains(str)) {
+                cmbModel.addElement(item);
+            }
+        });
+        cmbResult.setModel(cmbModel);
+        cmbResult.showPopup();
+
+        if(cmbResult.getSelectedIndex() == 0) {
+            txtName.setText("Please select an item from the dropdown menu.");
+        }
     }
 }
